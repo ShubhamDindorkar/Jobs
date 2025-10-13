@@ -57,15 +57,15 @@ export function Navigation() {
             </a>
           </div>
 
-          {/* Desktop Actions */}
-          <div className="flex items-center space-x-4">
-            <Button variant="outline" className="border-border">
-              Sign In
-            </Button>
-            <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-              Post a Job
-            </Button>
-          </div>
+              {/* Desktop Actions */}
+              <div className="flex items-center space-x-4">
+                <Button variant="outline" className="border-border" asChild>
+                  <a href="/signin">Sign In</a>
+                </Button>
+                <Button className="bg-primary text-primary-foreground hover:bg-primary/90" asChild>
+                  <a href="/signup">Sign Up</a>
+                </Button>
+              </div>
 
           {/* Mobile Menu Button */}
           <Button
@@ -115,14 +115,14 @@ export function Navigation() {
               >
                 Career Advice
               </a>
-              <div className="pt-4 space-y-2">
-                    <Button variant="outline" className="w-full border-border">
-                      Sign In
+                  <div className="pt-4 space-y-2">
+                    <Button variant="outline" className="w-full border-border" asChild>
+                      <a href="/signin">Sign In</a>
                     </Button>
-                    <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-                      Post a Job
+                    <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90" asChild>
+                      <a href="/signup">Sign Up</a>
                     </Button>
-              </div>
+                  </div>
             </div>
           </motion.div>
         )}

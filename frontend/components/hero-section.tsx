@@ -52,8 +52,8 @@ export function HeroSection() {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="flex justify-center items-center mb-8"
           >
-            <Button className="h-14 px-12 text-lg bg-primary text-primary-foreground hover:bg-primary/90 dreamy-shadow-green">
-              Sign Up Now
+            <Button className="h-14 px-12 text-lg bg-primary text-primary-foreground hover:bg-primary/90 dreamy-shadow-green" asChild>
+              <a href="/signup">Sign Up Now</a>
             </Button>
           </motion.div>
 
