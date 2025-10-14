@@ -195,8 +195,8 @@ export const MobileNavMenu = ({
   children,
   className,
   isOpen,
-  onClose,
-}: MobileNavMenuProps) => {
+  // onClose not used in template
+}: Omit<MobileNavMenuProps, "onClose">) => {
   return (
     <AnimatePresence>
       {isOpen && (

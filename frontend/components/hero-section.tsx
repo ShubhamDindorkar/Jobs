@@ -1,9 +1,8 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import { Star, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Spotlight } from "@/components/ui/spotlight-new";
 
 export function HeroSection() {

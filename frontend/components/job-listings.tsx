@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import { Filter, SortAsc } from "lucide-react";
+// removed unused icons
 import { Button } from "@/components/ui/button";
 import { JobCard } from "@/components/job-card";
 

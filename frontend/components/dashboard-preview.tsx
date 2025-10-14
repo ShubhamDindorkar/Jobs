@@ -12,8 +12,7 @@ import {
   Grid3X3,
   Calendar,
   Infinity,
-  Smartphone,
-  Users
+  Smartphone
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
