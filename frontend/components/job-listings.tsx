@@ -122,9 +122,12 @@ export function JobListings() {
     }
   }, [title, location, level]);
 
+  // Initial load only
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(() => {
     fetchJobs();
-  }, [fetchJobs]);
+    // empty deps to keep array size constant between renders
+  }, []);
 
   return (
     <section id="jobs" className="py-20 bg-background">
