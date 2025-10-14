@@ -11,8 +11,9 @@ export async function GET(req: NextRequest) {
     }
     const data = await r.json();
     return NextResponse.json(data, { status: 200 });
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message || "Proxy failed" }, { status: 500 });
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : "Proxy failed";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 

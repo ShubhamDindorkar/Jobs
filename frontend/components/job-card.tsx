@@ -24,8 +24,11 @@ interface JobCardProps {
   index: number;
 }
 
+type JobWithExtras = JobCardProps["job"] & { matchPercent?: number; applyUrl?: string };
+
 export function JobCard({ job, index }: JobCardProps) {
-  const matchPercent = (job as any).matchPercent ?? 74;
+  const extended = job as JobWithExtras;
+  const matchPercent = extended.matchPercent ?? 74;
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -103,7 +106,7 @@ export function JobCard({ job, index }: JobCardProps) {
                     <MessageCircleMore className="h-4 w-4 mr-1" /> Ask AI
                   </Button>
                   <Button size="sm" className="opacity-100" asChild>
-                    <a href={(job as any).applyUrl || "#"} target="_blank" rel="noreferrer">Apply Now</a>
+                    <a href={extended.applyUrl || "#"} target="_blank" rel="noreferrer">Apply Now</a>
                   </Button>
                 </div>
               </div>

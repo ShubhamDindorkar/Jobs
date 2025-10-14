@@ -124,7 +124,7 @@ export function JobListings() {
 
   React.useEffect(() => {
     fetchJobs();
-  }, []); // initial load
+  }, [fetchJobs]);
 
   return (
     <section id="jobs" className="py-20 bg-background">
