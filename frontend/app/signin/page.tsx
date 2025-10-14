@@ -53,6 +53,7 @@ export default function SignInPage() {
         provider: "google",
         options: {
           redirectTo: typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : undefined,
+          queryParams: { prompt: "consent" },
         },
       });
     } catch (err) {

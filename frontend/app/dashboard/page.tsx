@@ -74,12 +74,12 @@ export default function DashboardPage() {
         gradientThird="radial-gradient(50% 50% at 50% 50%, hsla(140, 80%, 70%, .06) 0, hsla(140, 70%, 35%, .03) 80%, transparent 100%)"
         fadeIn={false}
       />
-      <div className="relative w-full h-full px-3 md:px-6 py-4 md:py-6 grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-5 bg-background/60 backdrop-blur-[2px] overflow-x-hidden">
-        <div className="hidden md:block md:col-span-2">
+      <div className="relative w-full h-full px-3 md:px-4 py-4 md:py-6 grid grid-cols-1 md:grid-cols-[18rem_1fr] gap-3 md:gap-6 bg-background/60 backdrop-blur-[2px] overflow-x-hidden">
+        <div className="hidden md:block">
           <Sidebar onSignOut={onSignOut} />
         </div>
         {/* Scrollable content area (middle + right) */}
-        <div className="md:col-span-9 h-full overflow-y-auto overflow-x-hidden pr-1 ml-6 md:ml-12 -mr-2 md:-mr-4 rounded-[24px] md:rounded-[28px] border border-border/60 bg-secondary/30 backdrop-blur-md shadow-[0_10px_40px_rgba(0,0,0,0.25)]">
+        <div className="h-full overflow-y-auto overflow-x-hidden rounded-[24px] md:rounded-[28px] border border-border/60 bg-secondary/30 backdrop-blur-md shadow-[0_10px_40px_rgba(0,0,0,0.25)] md:mr-4 relative">
           <div className="pl-2 pr-3 py-3 md:pl-5 md:pr-6 md:py-6">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
             <div className={showAssistant ? "md:col-span-8" : "md:col-span-12"}>
@@ -96,14 +96,7 @@ export default function DashboardPage() {
               <Button size="sm" variant="outline" onClick={onSignOut}>Sign out</Button>
           </div>
           </div>
-            {/* Filter bar */}
-            <div className="w-full flex flex-wrap gap-2 mb-3 md:mb-4 overflow-x-hidden">
-              <Button variant="outline" size="sm">Remote</Button>
-              <Button variant="outline" size="sm">Hybrid</Button>
-              <Button variant="outline" size="sm">Full-time</Button>
-              <Button variant="outline" size="sm">Intern</Button>
-              <Button variant="outline" size="sm">Entry</Button>
-            </div>
+            {/* Filter bar removed */}
 
             {/* Jobs Feed */}
             <JobListings />

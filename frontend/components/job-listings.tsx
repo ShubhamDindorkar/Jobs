@@ -91,12 +91,10 @@ export function JobListings() {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
-  // Search/filter state
-  const [query, setQuery] = React.useState("");
+  // Search fields
+  const [title, setTitle] = React.useState("");
   const [location, setLocation] = React.useState("");
-  const [jobType, setJobType] = React.useState<string | undefined>(undefined); // F,P,C,T,I
-  const [workType, setWorkType] = React.useState<string | undefined>(undefined); // 1,2,3
-  const [sortBy, setSortBy] = React.useState("DD"); // DD (date), R (relevance)
+  const [level, setLevel] = React.useState<string | undefined>(undefined); // 1..5
 
   const fetchJobs = React.useCallback(async () => {
     try {
@@ -104,12 +102,14 @@ export function JobListings() {
       setError(null);
       const base = "/api/jobs"; // Next.js API route proxy
       const params = new URLSearchParams();
-      params.set("sort_by", sortBy);
+      params.set("sort_by", "DD");
       params.set("page", "1");
-      if (query.trim()) params.set("field", query.trim());
       if (location.trim()) params.set("location", location.trim());
-      if (jobType) params.set("job_type", jobType);
-      if (workType) params.set("work_type", workType);
+      // Title → field (fallback to generic if empty)
+      if (title.trim()) params.set("field", title.trim());
+      else params.set("field", "jobs");
+      // Job level (maps in backend to exp_level words)
+      if (level) params.set("exp_level", level);
       const r = await fetch(`${base}?${params.toString()}`);
       if (!r.ok) throw new Error(`Fetch failed: ${r.status}`);
       const data = await r.json();
@@ -120,7 +120,7 @@ export function JobListings() {
     } finally {
       setLoading(false);
     }
-  }, [query, location, jobType, workType, sortBy]);
+  }, [title, location, level]);
 
   React.useEffect(() => {
     fetchJobs();
@@ -144,7 +144,7 @@ export function JobListings() {
           </p>
         </motion.div>
 
-        {/* Search + Filters */}
+        {/* Search: title, location, level */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -152,11 +152,11 @@ export function JobListings() {
           viewport={{ once: true }}
           className="flex flex-col md:flex-row gap-4 mb-8"
         >
-          <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="flex-1 grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-3">
             <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search job titles, keywords"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Jobs title (e.g., Frontend, Data)"
               className="w-full rounded-2xl border border-border bg-background/50 px-3 py-2 text-sm"
             />
             <input
@@ -165,50 +165,23 @@ export function JobListings() {
               placeholder="Location (e.g., United States)"
               className="w-full rounded-2xl border border-border bg-background/50 px-3 py-2 text-sm"
             />
-            <div className="flex items-center gap-2">
+            <div className="flex items-stretch gap-3">
               <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="w-full rounded-2xl border border-border bg-background/50 px-3 py-2 text-sm"
+                value={level ?? ""}
+                onChange={(e) => setLevel(e.target.value || undefined)}
+                className="rounded-2xl border border-border bg-background/50 px-3 text-sm"
               >
-                <option value="DD">Latest</option>
-                <option value="R">Relevance</option>
+                <option value="">Job level</option>
+                <option value="1">Internship</option>
+                <option value="2">Entry level</option>
+                <option value="3">Associate</option>
+                <option value="4">Mid-Senior</option>
+                <option value="5">Director</option>
               </select>
-              <Button onClick={fetchJobs} disabled={loading} className="rounded-2xl">
-                {loading ? "Searching..." : "Search"}
+              <Button onClick={fetchJobs} disabled={loading} className="rounded-2xl justify-center">
+              {loading ? "Searching..." : "Search"}
               </Button>
             </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Button
-              variant={workType === "2" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setWorkType(workType === "2" ? undefined : "2")}
-            >
-              Remote
-            </Button>
-            <Button
-              variant={jobType === "F" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setJobType(jobType === "F" ? undefined : "F")}
-            >
-              Full-time
-            </Button>
-            <Button
-              variant={jobType === "P" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setJobType(jobType === "P" ? undefined : "P")}
-            >
-              Part-time
-            </Button>
-            <Button
-              variant={jobType === "C" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setJobType(jobType === "C" ? undefined : "C")}
-            >
-              Contract
-            </Button>
           </div>
         </motion.div>
 
