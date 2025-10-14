@@ -12,6 +12,7 @@ type SpotlightProps = {
   smallWidth?: number;
   duration?: number;
   xOffset?: number;
+  fadeIn?: boolean;
 };
 
 export const Spotlight = ({
@@ -24,18 +25,13 @@ export const Spotlight = ({
   smallWidth = 240,
   duration = 30,
   xOffset = 100,
+  fadeIn = true,
 }: SpotlightProps = {}) => {
   return (
     <motion.div
-      initial={{
-        opacity: 0,
-      }}
-      animate={{
-        opacity: 1,
-      }}
-      transition={{
-        duration: 1.5,
-      }}
+      initial={fadeIn ? { opacity: 0 } : false}
+      animate={fadeIn ? { opacity: 1 } : undefined}
+      transition={fadeIn ? { duration: 1.0 } : undefined}
       className="pointer-events-none absolute inset-0 h-full w-full"
     >
       <motion.div
@@ -49,7 +45,7 @@ export const Spotlight = ({
           repeatType: "reverse",
           ease: "easeInOut",
         }}
-        className="absolute top-0 left-0 w-screen h-screen z-40 pointer-events-none"
+        className="absolute top-0 left-0 w-full h-full z-40 pointer-events-none"
       >
         <div
           style={{
@@ -93,7 +89,7 @@ export const Spotlight = ({
           repeatType: "reverse",
           ease: "easeInOut",
         }}
-        className="absolute top-0 right-0 w-screen h-screen z-40 pointer-events-none"
+        className="absolute top-0 right-0 w-full h-full z-40 pointer-events-none"
       >
         <div
           style={{

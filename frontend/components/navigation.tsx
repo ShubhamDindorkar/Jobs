@@ -3,130 +3,82 @@ import React from "react";
 import { motion } from "framer-motion";
 import { X, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Navbar,
+  NavBody,
+  NavItems,
+  MobileNav,
+  MobileNavHeader,
+  MobileNavMenu,
+  MobileNavToggle,
+  NavbarButton,
+} from "@/components/ui/resizable-navbar";
 
 export function Navigation() {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+
+  const items = [
+    { name: "Find Jobs", link: "#jobs" },
+    { name: "Companies", link: "#companies" },
+    { name: "Salaries", link: "#salaries" },
+    { name: "Career Advice", link: "#careers" },
+  ];
 
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-[95%] max-w-6xl bg-background/80 backdrop-blur-md border-[0.5px] border-border rounded-3xl dreamy-shadow"
-    >
-      <div className="px-6">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="flex items-center space-x-2"
-          >
+    <Navbar className="top-4">
+      <NavBody className="!rounded-3xl !border border-border !bg-background/80 dark:!bg-background/80">
+        <div className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1">
+          <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
+            <span className="text-primary-foreground font-bold text-lg">X</span>
+          </div>
+          <span className="font-elegant-thin text-xl text-foreground">JobSearch</span>
+        </div>
+
+        {/* Reserve horizontal space so centered nav items don't collide with logo/actions */}
+        <NavItems items={items} className="pl-36 pr-40 xl:pl-44 xl:pr-52" />
+
+        <div className="hidden items-center space-x-4 lg:flex">
+          <NavbarButton as="a" href="/signin" className="border-border" variant="secondary">
+            Sign In
+          </NavbarButton>
+          <NavbarButton as="a" href="/signup" className="bg-primary text-primary-foreground hover:bg-primary/90">
+            Sign Up
+          </NavbarButton>
+        </div>
+      </NavBody>
+
+      <MobileNav>
+        <MobileNavHeader>
+          <div className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1">
             <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-lg">X</span>
             </div>
-            <span className="font-elegant-thin text-xl text-foreground">
-              JobSearch
-            </span>
-          </motion.div>
-
-          {/* Desktop Navigation */}
-          <div className="flex items-center space-x-8">
-            <a
-              href="#jobs"
-              className="text-sm font-medium text-primary transition-colors"
-            >
-              Find Jobs
-            </a>
-            <a
-              href="#companies"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Companies
-            </a>
-            <a
-              href="#salaries"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Salaries
-            </a>
-            <a
-              href="#careers"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Career Advice
-            </a>
+            <span className="font-elegant-thin text-xl text-foreground">JobSearch</span>
           </div>
 
-              {/* Desktop Actions */}
-              <div className="flex items-center space-x-4">
-                <Button variant="outline" className="border-border" asChild>
-                  <a href="/signin">Sign In</a>
-                </Button>
-                <Button className="bg-primary text-primary-foreground hover:bg-primary/90" asChild>
-                  <a href="/signup">Sign Up</a>
-                </Button>
-              </div>
+          <button className="rounded-full border border-border p-2" onClick={() => setOpen(!open)}>
+            <MobileNavToggle isOpen={open} onClick={() => setOpen(!open)} />
+          </button>
+        </MobileNavHeader>
 
-          {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            {isMenuOpen ? (
-              <X className="h-5 w-5" />
-            ) : (
-              <Menu className="h-5 w-5" />
-            )}
-          </Button>
-        </div>
-
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-border mt-4 pt-4"
-          >
-            <div className="py-4 space-y-4">
-              <a
-                href="#jobs"
-                className="block text-sm font-medium text-primary transition-colors"
-              >
-                Find Jobs
+        <MobileNavMenu isOpen={open} onClose={() => setOpen(false)}>
+          <div className="flex w-full flex-col gap-2">
+            {items.map((it) => (
+              <a key={it.link} href={it.link} className="px-2 py-2 text-sm text-foreground" onClick={() => setOpen(false)}>
+                {it.name}
               </a>
-              <a
-                href="#companies"
-                className="block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Companies
-              </a>
-              <a
-                href="#salaries"
-                className="block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Salaries
-              </a>
-              <a
-                href="#careers"
-                className="block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Career Advice
-              </a>
-                  <div className="pt-4 space-y-2">
-                    <Button variant="outline" className="w-full border-border" asChild>
-                      <a href="/signin">Sign In</a>
-                    </Button>
-                    <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90" asChild>
-                      <a href="/signup">Sign Up</a>
-                    </Button>
+            ))}
                   </div>
+          <div className="mt-4 flex w-full flex-col gap-2">
+            <NavbarButton as="a" href="/signin" className="w-full border border-border" variant="secondary">
+              Sign In
+            </NavbarButton>
+            <NavbarButton as="a" href="/signup" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+              Sign Up
+            </NavbarButton>
             </div>
-          </motion.div>
-        )}
-      </div>
-    </motion.nav>
+        </MobileNavMenu>
+      </MobileNav>
+    </Navbar>
   );
 }

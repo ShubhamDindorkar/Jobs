@@ -1,5 +1,6 @@
 "use client";
 import { Card, CardContent } from "@/components/ui/card";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
 import { ArrowUpRight } from "lucide-react";
 
 type StatCardProps = {
@@ -11,8 +12,9 @@ type StatCardProps = {
 
 export function StatCard({ title, value, sublabel, icon }: StatCardProps) {
   return (
-    <Card className="bg-secondary/40 border-border/60 hover:bg-secondary/50 transition-colors">
-      <CardContent className="p-5">
+    <Card className="relative bg-secondary/40 border-border/60 hover:bg-secondary/50 transition-colors">
+      <GlowingEffect proximity={64} blur={6} spread={24} glow className="opacity-70" disabled={false} />
+      <CardContent className="relative p-5">
         <div className="flex items-start justify-between mb-4">
           <div>
             <p className="text-xs uppercase tracking-wide text-muted-foreground">{title}</p>

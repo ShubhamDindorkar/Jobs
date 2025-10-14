@@ -10,6 +10,7 @@ const items = [
   { href: "/dashboard/calendar", label: "Calendar", icon: <Calendar className="h-4 w-4" /> },
   { href: "/dashboard/analytics", label: "Analytics", icon: <BarChart3 className="h-4 w-4" /> },
   { href: "/dashboard/team", label: "Team", icon: <Users className="h-4 w-4" /> },
+  { href: "/dashboard/profile", label: "Profile", icon: <Users className="h-4 w-4" /> },
 ];
 
 export function Sidebar({ onSignOut }: { onSignOut?: () => void }) {

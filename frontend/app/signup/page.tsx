@@ -58,8 +58,26 @@ export default function SignUpPage() {
     }
   };
 
+  const handleGoogleSignUp = async () => {
+    setIsLoading(true);
+    try {
+      await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo:
+            typeof window !== "undefined"
+              ? `${window.location.origin}/auth/callback`
+              : undefined,
+        },
+      });
+    } catch (err) {
+      console.error(err);
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-background">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-grid-subtle" />
       
@@ -72,7 +90,7 @@ export default function SignUpPage() {
         xOffset={50}
       />
 
-      <div className="relative z-10 min-h-screen flex items-center justify-center px-4 py-12">
+      <div className="relative z-10 min-h-dvh flex items-center justify-center px-4 py-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -84,7 +102,7 @@ export default function SignUpPage() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mb-8"
+            className="mb-4"
           >
             <Link href="/">
               <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
@@ -99,7 +117,7 @@ export default function SignUpPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-center mb-8"
+            className="text-center mb-4"
           >
             <h1 className="font-luxury text-4xl md:text-5xl text-foreground mb-4 dreamy-text-shadow">
               Join <span className="text-primary dreamy-text-shadow-green">JobSearch</span>
@@ -114,11 +132,11 @@ export default function SignUpPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="bg-background/80 backdrop-blur-md border border-border rounded-3xl p-8 dreamy-shadow"
+            className="bg-background/80 backdrop-blur-md border border-border rounded-3xl p-6 dreamy-shadow"
           >
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               {/* Name Fields */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -205,9 +223,30 @@ export default function SignUpPage() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full h-12 text-lg bg-primary text-primary-foreground hover:bg-primary/90 rounded-2xl dreamy-shadow-green"
+                className="w-full h-11 text-lg bg-primary text-primary-foreground hover:bg-primary/90 rounded-2xl dreamy-shadow-green"
               >
                 {isLoading ? "Creating Account..." : "Create Account"}
+              </Button>
+
+              {/* Or divider */}
+              <div className="relative py-1 text-center">
+                <span className="relative z-10 px-3 text-xs text-muted-foreground bg-background/80">
+                  or
+                </span>
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full h-px bg-border" />
+                </div>
+              </div>
+
+              {/* Google Sign Up */}
+              <Button
+                type="button"
+                variant="outline"
+                disabled={isLoading}
+                onClick={handleGoogleSignUp}
+                className="w-full h-10 rounded-2xl border-border"
+              >
+                Continue with Google
               </Button>
 
               {errorMsg && (
@@ -233,7 +272,7 @@ export default function SignUpPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
-            className="text-center mt-6"
+            className="text-center mt-4"
           >
             <p className="text-muted-foreground">
               Already have an account?{" "}

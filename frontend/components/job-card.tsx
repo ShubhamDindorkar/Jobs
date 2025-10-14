@@ -1,8 +1,9 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import { MapPin, Clock, DollarSign, Building2, Star } from "lucide-react";
+import { MapPin, Clock, DollarSign, Building2, Star, MessageCircleMore } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
 import { Button } from "@/components/ui/button";
 
 interface JobCardProps {
@@ -24,6 +25,7 @@ interface JobCardProps {
 }
 
 export function JobCard({ job, index }: JobCardProps) {
+  const matchPercent = (job as any).matchPercent ?? 74;
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -32,7 +34,8 @@ export function JobCard({ job, index }: JobCardProps) {
       whileHover={{ y: -5 }}
       className="group"
     >
-      <Card className="h-full hover:shadow-lg transition-all duration-300 border-l-4 border-l-transparent hover:border-l-primary bg-secondary/30 backdrop-blur-sm border-border hover:glow-effect">
+      <Card className="relative h-full hover:shadow-lg transition-all duration-300 border-l-4 border-l-transparent hover:border-l-primary bg-secondary/30 backdrop-blur-sm border-border">
+        <GlowingEffect proximity={72} blur={8} spread={26} glow className="opacity-70" disabled={false} />
         <CardHeader className="pb-4">
           <div className="flex items-start justify-between">
             <div className="flex items-center space-x-4">
@@ -66,38 +69,63 @@ export function JobCard({ job, index }: JobCardProps) {
           </div>
         </CardHeader>
 
-        <CardContent className="pt-0">
-          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-            {job.description}
-          </p>
+        <CardContent className="relative pt-0">
+          <div className="grid grid-cols-[1fr_auto] gap-4 md:gap-6 items-center">
+            <div>
+              <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                {job.description}
+              </p>
 
-          <div className="flex flex-wrap gap-2 mb-4">
-            <div className="flex items-center text-xs text-muted-foreground">
-              <MapPin className="h-3 w-3 mr-1" />
-              {job.location}
-              {job.isRemote && (
-                <span className="ml-1 px-1.5 py-0.5 bg-primary text-primary-foreground rounded text-xs">
-                  Remote
-                </span>
-              )}
-            </div>
-            <div className="flex items-center text-xs text-muted-foreground">
-              <DollarSign className="h-3 w-3 mr-1" />
-              {job.salary}
-            </div>
-            <div className="flex items-center text-xs text-muted-foreground">
-              <Clock className="h-3 w-3 mr-1" />
-              {job.type}
-            </div>
-          </div>
+              <div className="flex flex-wrap gap-2 mb-4">
+                <div className="flex items-center text-xs text-muted-foreground">
+                  <MapPin className="h-3 w-3 mr-1" />
+                  {job.location}
+                  {job.isRemote && (
+                    <span className="ml-1 px-1.5 py-0.5 bg-primary text-primary-foreground rounded text-xs">
+                      Remote
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center text-xs text-muted-foreground">
+                  <DollarSign className="h-3 w-3 mr-1" />
+                  {job.salary}
+                </div>
+                <div className="flex items-center text-xs text-muted-foreground">
+                  <Clock className="h-3 w-3 mr-1" />
+                  {job.type}
+                </div>
+              </div>
 
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-muted-foreground">
-              Posted {job.posted}
-            </span>
-            <Button size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
-              Apply Now
-            </Button>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-muted-foreground">Posted {job.posted}</span>
+                <div className="flex items-center gap-2">
+                  <Button variant="outline" size="sm" className="hidden md:inline-flex">
+                    <MessageCircleMore className="h-4 w-4 mr-1" /> Ask AI
+                  </Button>
+                  <Button size="sm" className="opacity-100">Apply Now</Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Match panel */}
+            <div className="flex flex-col items-center justify-center rounded-xl border border-border/60 bg-secondary/40 px-4 py-5 w-48">
+              <div className="relative h-20 w-20 mb-2">
+                <div
+                  className="absolute inset-0 rounded-full"
+                  style={{
+                    background: `conic-gradient(var(--color-primary) ${matchPercent * 3.6}deg, rgba(255,255,255,0.08) 0deg)`,
+                  }}
+                />
+                <div className="absolute inset-1 rounded-full bg-background/80 border border-border/60 flex items-center justify-center">
+                  <span className="text-xl font-semibold text-foreground">{matchPercent}%</span>
+                </div>
+              </div>
+              <div className="text-[10px] tracking-wide font-semibold text-foreground mb-2">GOOD MATCH</div>
+              <ul className="text-xs text-muted-foreground space-y-1">
+                <li>• Growth Opportunities</li>
+                <li>• H1B Sponsor Likely</li>
+              </ul>
+            </div>
           </div>
         </CardContent>
       </Card>

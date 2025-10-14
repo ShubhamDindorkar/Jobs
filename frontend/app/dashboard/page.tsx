@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { JobListings } from "@/components/job-listings";
+import { Spotlight } from "@/components/ui/spotlight-new";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import { Sidebar } from "@/components/dashboard/sidebar";
@@ -65,22 +66,29 @@ export default function DashboardPage() {
   };
 
   return (
-    <main className="h-dvh overflow-hidden bg-background">
-      <div className="w-full h-full px-4 md:px-6 py-6 grid grid-cols-1 md:grid-cols-12 gap-6 bg-background">
-        <div className="md:col-span-3">
+    <main className="relative h-dvh overflow-hidden bg-background">
+      {/* Background spotlight (green variant) */}
+      <Spotlight
+        gradientFirst="radial-gradient(68.54% 68.72% at 55.02% 31.46%, hsla(140, 85%, 70%, .10) 0, hsla(140, 70%, 45%, .04) 50%, hsla(140, 70%, 35%, 0) 80%)"
+        gradientSecond="radial-gradient(50% 50% at 50% 50%, hsla(140, 80%, 70%, .08) 0, hsla(140, 70%, 45%, .04) 80%, transparent 100%)"
+        gradientThird="radial-gradient(50% 50% at 50% 50%, hsla(140, 80%, 70%, .06) 0, hsla(140, 70%, 35%, .03) 80%, transparent 100%)"
+        fadeIn={false}
+      />
+      <div className="relative w-full h-full px-3 md:px-6 py-4 md:py-6 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 bg-background/60 backdrop-blur-[2px] overflow-x-hidden">
+        <div className="hidden md:block md:col-span-3">
           <Sidebar onSignOut={onSignOut} />
         </div>
         {/* Scrollable content area (middle + right) */}
-        <div className="md:col-span-9 h-full overflow-y-auto pr-1 rounded-2xl border border-border/60 bg-secondary/30 backdrop-blur-md">
-          <div className="p-4 md:p-6">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+        <div className="md:col-span-9 h-full overflow-y-auto overflow-x-hidden pr-1 rounded-xl md:rounded-2xl border border-border/60 bg-secondary/30 backdrop-blur-md">
+          <div className="pl-2 pr-3 py-3 md:pl-5 md:pr-6 md:py-6">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 -ml-1 md:-ml-2">
             <div className={showAssistant ? "md:col-span-8" : "md:col-span-12"}>
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-4 md:mb-6">
             <button className="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl border border-border/60" onClick={() => setDrawerOpen(true)}>
               <Menu className="h-5 w-5" />
             </button>
-                <h1 className="font-heading text-2xl">Jobs</h1>
-          <div className="flex items-center gap-3 text-sm">
+                <h1 className="font-heading text-xl md:text-2xl">Jobs</h1>
+          <div className="hidden md:flex items-center gap-3 text-sm">
                   <Button size="sm" variant="outline" onClick={() => setShowAssistant(!showAssistant)}>
                     {showAssistant ? "Hide Assistant" : "Show Assistant"}
                   </Button>
@@ -89,7 +97,7 @@ export default function DashboardPage() {
           </div>
           </div>
             {/* Filter bar */}
-            <div className="flex flex-wrap gap-2 mb-4">
+            <div className="w-full flex flex-wrap gap-2 mb-3 md:mb-4 overflow-x-hidden">
               <Button variant="outline" size="sm">Remote</Button>
               <Button variant="outline" size="sm">Hybrid</Button>
               <Button variant="outline" size="sm">Full-time</Button>
@@ -102,7 +110,7 @@ export default function DashboardPage() {
             </div>
             {showAssistant && (
               <div className="md:col-span-4 space-y-4">
-                <div className="bg-secondary/40 border border-border/60 rounded-2xl p-4">
+                <div className="bg-secondary/40 border border-border/60 rounded-xl md:rounded-2xl p-3 md:p-4">
                   <h3 className="font-heading text-lg mb-2">Assistant</h3>
                   <p className="text-sm text-muted-foreground">Tips and quick actions will appear here.</p>
                 </div>

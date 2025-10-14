@@ -62,7 +62,7 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-background">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-grid-subtle" />
       
@@ -75,7 +75,7 @@ export default function SignInPage() {
         xOffset={50}
       />
 
-      <div className="relative z-10 min-h-screen flex items-center justify-center px-4 py-12">
+      <div className="relative z-10 min-h-dvh flex items-center justify-center px-4 py-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -87,7 +87,7 @@ export default function SignInPage() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mb-8"
+            className="mb-4"
           >
             <Link href="/">
               <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
@@ -102,7 +102,7 @@ export default function SignInPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-center mb-8"
+            className="text-center mb-4"
           >
             <h1 className="font-luxury text-4xl md:text-5xl text-foreground mb-4 dreamy-text-shadow">
               Welcome <span className="text-primary dreamy-text-shadow-green">Back</span>
@@ -117,9 +117,9 @@ export default function SignInPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="bg-background/80 backdrop-blur-md border border-border rounded-3xl p-8 dreamy-shadow"
+            className="bg-background/80 backdrop-blur-md border border-border rounded-3xl p-6 dreamy-shadow"
           >
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               {/* Email Field */}
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -156,7 +156,7 @@ export default function SignInPage() {
               </div>
 
               {/* Forgot Password */}
-              <div className="text-right">
+              <div className="text-right mt-1">
                 <Link href="/forgot-password" className="text-sm text-primary hover:underline">
                   Forgot your password?
                 </Link>
@@ -166,7 +166,7 @@ export default function SignInPage() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full h-12 text-lg bg-primary text-primary-foreground hover:bg-primary/90 rounded-2xl dreamy-shadow-green"
+                className="w-full h-11 text-lg bg-primary text-primary-foreground hover:bg-primary/90 rounded-2xl dreamy-shadow-green"
               >
                 {isLoading ? "Signing In..." : "Sign In"}
               </Button>
@@ -183,7 +183,7 @@ export default function SignInPage() {
             type="button"
             onClick={handleGoogleSignIn}
             disabled={isLoading}
-            className="w-full h-12 text-lg rounded-2xl border border-border bg-background text-foreground hover:bg-background/80"
+            className="w-full h-10 text-base rounded-2xl border border-border bg-background text-foreground hover:bg-background/80"
           >
             Continue with Google
           </Button>

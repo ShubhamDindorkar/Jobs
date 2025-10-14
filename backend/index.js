@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const { createClient } = require('@supabase/supabase-js');
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 
 // Load environment variables
 dotenv.config();
@@ -22,9 +24,49 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// S3-compatible client (Supabase Storage S3 API)
+const s3 = new S3Client({
+  region: process.env.SUPABASE_S3_REGION || 'us-east-1',
+  endpoint: process.env.SUPABASE_S3_ENDPOINT, // e.g., https://...supabase.co/storage/v1/s3
+  credentials: {
+    accessKeyId: process.env.SUPABASE_S3_ACCESS_KEY_ID || '',
+    secretAccessKey: process.env.SUPABASE_S3_SECRET_ACCESS_KEY || '',
+  },
+  forcePathStyle: true,
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'JobSearch Backend is running!' });
+});
+
+// Generate presigned PUT URL for direct uploads to Supabase Storage via S3 API
+app.post('/storage/upload-url', async (req, res) => {
+  try {
+    const { userId, contentType = 'application/pdf' } = req.body || {};
+    if (!userId) {
+      return res.status(400).json({ error: 'Missing userId' });
+    }
+
+    const bucket = process.env.RESUMES_BUCKET || 'resume';
+    const key = `${userId}/resume-${Date.now()}.pdf`;
+
+    const command = new PutObjectCommand({
+      Bucket: bucket,
+      Key: key,
+      ContentType: contentType,
+    });
+
+    const url = await getSignedUrl(s3, command, { expiresIn: 60 }); // 60 seconds
+
+    // If bucket is public, this URL will serve the file after upload
+    const publicUrl = `${process.env.SUPABASE_URL.replace(/\/$/, '')}/storage/v1/object/public/${bucket}/${key}`;
+
+    return res.json({ url, bucket, key, publicUrl });
+  } catch (error) {
+    console.error('presign error', error);
+    return res.status(500).json({ error: 'Failed to create upload URL' });
+  }
 });
 
 // Auth routes

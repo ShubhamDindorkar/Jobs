@@ -8,7 +8,7 @@ import { Spotlight } from "@/components/ui/spotlight-new";
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-background pt-24">
+    <section className="relative min-h-screen flex items-start justify-center bg-background pt-36 md:pt-40">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-grid-subtle" />
       
@@ -22,7 +22,7 @@ export function HeroSection() {
       />
       
       <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center max-w-4xl mx-auto">
+        <div className="text-center max-w-4xl mx-auto pt-10 md:pt-6">
 
           {/* Main Heading */}
           <motion.div
@@ -57,12 +57,24 @@ export function HeroSection() {
             </Button>
           </motion.div>
 
+          {/* Decorative line to reduce empty space */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.7 }}
+            className="relative mb-10"
+          >
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="h-px w-full max-w-3xl bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+            </div>
+          </motion.div>
+
           {/* Feature Highlights */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center text-sm"
+            className="mt-16 md:mt-20 flex flex-col sm:flex-row gap-4 justify-center items-center text-sm"
           >
             <div className="flex items-center space-x-2">
               <Check className="h-4 w-4 text-primary" />
