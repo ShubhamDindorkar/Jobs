@@ -14,7 +14,7 @@ interface JobCardProps {
     location: string;
     salary: string;
     type: string;
-    posted: string;
+    posted?: string;
     description: string;
     logo?: string;
     rating?: number;
@@ -100,7 +100,7 @@ export function JobCard({ job, index }: JobCardProps) {
               </div>
 
                 <div className="flex items-center justify-between">
-                <span className="text-xs text-muted-foreground">Posted {job.posted}</span>
+                <span className="text-xs text-muted-foreground">Posted {job.posted ?? "Recently"}</span>
                 <div className="flex items-center gap-2">
                   <Button variant="outline" size="sm" className="hidden md:inline-flex">
                     <MessageCircleMore className="h-4 w-4 mr-1" /> Ask AI

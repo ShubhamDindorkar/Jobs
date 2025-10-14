@@ -113,7 +113,7 @@ export function JobListings() {
       const r = await fetch(`${base}?${params.toString()}`);
       if (!r.ok) throw new Error(`Fetch failed: ${r.status}`);
       const data = await r.json();
-      const next = Array.isArray(data?.jobs) ? data.jobs : [];
+      const next = Array.isArray(data?.jobs) ? data.jobs : [] as any[];
       setJobs(next.length ? next : []);
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : "Failed to load jobs";
