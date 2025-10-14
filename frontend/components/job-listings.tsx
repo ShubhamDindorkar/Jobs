@@ -115,8 +115,9 @@ export function JobListings() {
       const data = await r.json();
       const next = Array.isArray(data?.jobs) ? data.jobs : [];
       setJobs(next.length ? next : []);
-    } catch (e: any) {
-      setError(e?.message || "Failed to load jobs");
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Failed to load jobs";
+      setError(msg);
     } finally {
       setLoading(false);
     }

@@ -1,8 +1,6 @@
 "use client";
 import React from "react";
-import { motion } from "framer-motion";
-import { X, Menu } from "lucide-react";
-import { Button } from "@/components/ui/button";
+// cleaned unused imports
 import {
   Navbar,
   NavBody,
