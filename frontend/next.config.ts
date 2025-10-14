@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  experimental: {
+    instrumentationHook: false,
+    // ensure webpack pipeline
+    turbo: false,
+  },
 };
 
 export default nextConfig;
