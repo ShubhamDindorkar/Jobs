@@ -59,7 +59,7 @@ export function Navigation() {
           </button>
         </MobileNavHeader>
 
-        <MobileNavMenu isOpen={open} onClose={() => setOpen(false)}>
+        <MobileNavMenu isOpen={open}>
           <div className="flex w-full flex-col gap-2">
             {items.map((it) => (
               <a key={it.link} href={it.link} className="px-2 py-2 text-sm text-foreground" onClick={() => setOpen(false)}>
