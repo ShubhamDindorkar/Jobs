@@ -96,13 +96,15 @@ export function JobCard({ job, index }: JobCardProps) {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between">
                 <span className="text-xs text-muted-foreground">Posted {job.posted}</span>
                 <div className="flex items-center gap-2">
                   <Button variant="outline" size="sm" className="hidden md:inline-flex">
                     <MessageCircleMore className="h-4 w-4 mr-1" /> Ask AI
                   </Button>
-                  <Button size="sm" className="opacity-100">Apply Now</Button>
+                  <Button size="sm" className="opacity-100" asChild>
+                    <a href={(job as any).applyUrl || "#"} target="_blank" rel="noreferrer">Apply Now</a>
+                  </Button>
                 </div>
               </div>
             </div>

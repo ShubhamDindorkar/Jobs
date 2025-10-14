@@ -146,23 +146,22 @@ export default function ProfilePage() {
         fadeIn={false}
       />
 
-      <div className="relative z-10 mx-auto max-w-3xl px-4 py-8 md:py-10">
-        {/* Back to Dashboard */}
-        <div className="mb-6">
-          <Link href="/dashboard">
-            <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Dashboard
-            </Button>
+      <div className="relative z-10 mx-auto max-w-5xl px-4 py-8 md:py-12">
+        {/* Top right pill */}
+        <div className="flex items-center justify-end mb-4 md:mb-6">
+          <Link href="/dashboard" className="inline-flex">
+            <div className="rounded-2xl border border-border bg-background/80 px-4 py-2 text-sm text-foreground shadow-sm">
+              <span className="inline-flex items-center"><ArrowLeft className="h-4 w-4 mr-2"/>Back to Dashboard</span>
+            </div>
           </Link>
         </div>
 
-        <div className="mb-4 text-center">
-          <h1 className="font-heading text-2xl">Your Profile</h1>
-          <p className="text-sm text-muted-foreground">{email}</p>
-        </div>
-
-        <div className="rounded-2xl border border-border/60 bg-secondary/30 backdrop-blur-md p-4 md:p-6">
+        {/* Big rounded panel */}
+        <div className="rounded-[24px] md:rounded-[28px] border border-border/60 bg-secondary/30 backdrop-blur-md p-5 md:p-8 shadow-[0_10px_40px_rgba(0,0,0,0.25)]">
+          <div className="mb-4 text-center">
+            <h1 className="font-heading text-2xl">Your Profile</h1>
+            <p className="text-sm text-muted-foreground">{email}</p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="mb-1 block text-xs text-muted-foreground">First name</label>
@@ -208,7 +207,7 @@ export default function ProfilePage() {
               )}
             </div>
           </div>
-          <div className="mt-4 flex justify-end gap-2">
+          <div className="mt-6 flex justify-end gap-2">
             <Button variant="outline" onClick={() => router.back()}>Cancel</Button>
             <Button onClick={onSave} disabled={saving}>{saving ? "Saving..." : "Save"}</Button>
           </div>

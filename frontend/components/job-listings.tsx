@@ -5,7 +5,7 @@ import { Filter, SortAsc } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { JobCard } from "@/components/job-card";
 
-// Mock data for demonstration
+// Mock fallback; replaced at runtime by API
 const mockJobs = [
   {
     id: "1",
@@ -87,6 +87,45 @@ const mockJobs = [
 ];
 
 export function JobListings() {
+  const [jobs, setJobs] = React.useState(mockJobs);
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+
+  // Search/filter state
+  const [query, setQuery] = React.useState("");
+  const [location, setLocation] = React.useState("");
+  const [jobType, setJobType] = React.useState<string | undefined>(undefined); // F,P,C,T,I
+  const [workType, setWorkType] = React.useState<string | undefined>(undefined); // 1,2,3
+  const [sortBy, setSortBy] = React.useState("DD"); // DD (date), R (relevance)
+
+  const fetchJobs = React.useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const base = "/api/jobs"; // Next.js API route proxy
+      const params = new URLSearchParams();
+      params.set("sort_by", sortBy);
+      params.set("page", "1");
+      if (query.trim()) params.set("field", query.trim());
+      if (location.trim()) params.set("location", location.trim());
+      if (jobType) params.set("job_type", jobType);
+      if (workType) params.set("work_type", workType);
+      const r = await fetch(`${base}?${params.toString()}`);
+      if (!r.ok) throw new Error(`Fetch failed: ${r.status}`);
+      const data = await r.json();
+      const next = Array.isArray(data?.jobs) ? data.jobs : [];
+      setJobs(next.length ? next : []);
+    } catch (e: any) {
+      setError(e?.message || "Failed to load jobs");
+    } finally {
+      setLoading(false);
+    }
+  }, [query, location, jobType, workType, sortBy]);
+
+  React.useEffect(() => {
+    fetchJobs();
+  }, []); // initial load
+
   return (
     <section id="jobs" className="py-20 bg-background">
       <div className="container mx-auto px-4">
@@ -105,7 +144,7 @@ export function JobListings() {
           </p>
         </motion.div>
 
-        {/* Filters */}
+        {/* Search + Filters */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -113,25 +152,73 @@ export function JobListings() {
           viewport={{ once: true }}
           className="flex flex-col md:flex-row gap-4 mb-8"
         >
-          <div className="flex-1 flex gap-2">
-            <Button variant="outline" className="flex items-center gap-2">
-              <Filter className="h-4 w-4" />
-              All Jobs
-            </Button>
-            <Button variant="ghost">Remote</Button>
-            <Button variant="ghost">Full-time</Button>
-            <Button variant="ghost">Part-time</Button>
-            <Button variant="ghost">Contract</Button>
+          <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-3">
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search job titles, keywords"
+              className="w-full rounded-2xl border border-border bg-background/50 px-3 py-2 text-sm"
+            />
+            <input
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              placeholder="Location (e.g., United States)"
+              className="w-full rounded-2xl border border-border bg-background/50 px-3 py-2 text-sm"
+            />
+            <div className="flex items-center gap-2">
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="w-full rounded-2xl border border-border bg-background/50 px-3 py-2 text-sm"
+              >
+                <option value="DD">Latest</option>
+                <option value="R">Relevance</option>
+              </select>
+              <Button onClick={fetchJobs} disabled={loading} className="rounded-2xl">
+                {loading ? "Searching..." : "Search"}
+              </Button>
+            </div>
           </div>
-          <Button variant="outline" className="flex items-center gap-2">
-            <SortAsc className="h-4 w-4" />
-            Sort by: Latest
-          </Button>
+
+          <div className="flex items-center gap-2">
+            <Button
+              variant={workType === "2" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setWorkType(workType === "2" ? undefined : "2")}
+            >
+              Remote
+            </Button>
+            <Button
+              variant={jobType === "F" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setJobType(jobType === "F" ? undefined : "F")}
+            >
+              Full-time
+            </Button>
+            <Button
+              variant={jobType === "P" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setJobType(jobType === "P" ? undefined : "P")}
+            >
+              Part-time
+            </Button>
+            <Button
+              variant={jobType === "C" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setJobType(jobType === "C" ? undefined : "C")}
+            >
+              Contract
+            </Button>
+          </div>
         </motion.div>
+
+        {error && (
+          <div className="mb-4 text-sm text-red-500">{error}</div>
+        )}
 
         {/* Job List (horizontal cards) */}
         <div className="grid grid-cols-1 gap-4 md:gap-6">
-          {mockJobs.map((job, index) => (
+          {jobs.map((job, index) => (
             <JobCard key={job.id} job={job} index={index} />
           ))}
         </div>
