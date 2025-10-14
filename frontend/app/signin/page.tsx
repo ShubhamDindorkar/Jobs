@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Spotlight } from "@/components/ui/spotlight-new";
 import Link from "next/link";
+import { supabase } from "@/lib/supabase";
 
 export default function SignInPage() {
   const [formData, setFormData] = useState({
@@ -14,6 +15,7 @@ export default function SignInPage() {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -25,15 +27,38 @@ export default function SignInPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
-    // TODO: Implement signin logic with backend
-    console.log("Sign in data:", formData);
-    
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      setErrorMsg(null);
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password,
+      });
+      if (error) throw error;
+      // Redirect on success
+      if (typeof window !== "undefined") {
+        window.location.href = "/dashboard";
+      }
+    } catch (err) {
+      console.error(err);
       setIsLoading(false);
-      // Handle success/error
-    }, 2000);
+      setErrorMsg(err instanceof Error ? err.message : "Sign in failed");
+      // Optionally surface a user-friendly message
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true);
+    try {
+      await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : undefined,
+        },
+      });
+    } catch (err) {
+      console.error(err);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -145,6 +170,23 @@ export default function SignInPage() {
               >
                 {isLoading ? "Signing In..." : "Sign In"}
               </Button>
+
+          {errorMsg && (
+            <p className="mt-2 text-sm text-red-500">{errorMsg}</p>
+          )}
+
+          {/* Or divider */}
+          <div className="text-center text-sm text-muted-foreground">or</div>
+
+          {/* Google Sign-in */}
+          <Button
+            type="button"
+            onClick={handleGoogleSignIn}
+            disabled={isLoading}
+            className="w-full h-12 text-lg rounded-2xl border border-border bg-background text-foreground hover:bg-background/80"
+          >
+            Continue with Google
+          </Button>
             </form>
           </motion.div>
 

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Spotlight } from "@/components/ui/spotlight-new";
 import Link from "next/link";
+import { supabase } from "@/lib/supabase";
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({
@@ -18,6 +19,7 @@ export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -29,15 +31,31 @@ export default function SignUpPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
-    // TODO: Implement signup logic with backend
-    console.log("Sign up data:", formData);
-    
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      setErrorMsg(null);
+      if (formData.password !== formData.confirmPassword) {
+        setIsLoading(false);
+        setErrorMsg("Passwords do not match");
+        return;
+      }
+      const { error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: { firstName: formData.firstName, lastName: formData.lastName },
+          emailRedirectTo: typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : undefined,
+        },
+      });
+      if (error) throw error;
+      // Optional: notify user to check email if confirmations enabled
+      if (typeof window !== "undefined") {
+        window.location.href = "/dashboard";
+      }
+    } catch (err) {
+      console.error(err);
       setIsLoading(false);
-      // Handle success/error
-    }, 2000);
+      setErrorMsg(err instanceof Error ? err.message : "Sign up failed");
+    }
   };
 
   return (
@@ -191,6 +209,10 @@ export default function SignUpPage() {
               >
                 {isLoading ? "Creating Account..." : "Create Account"}
               </Button>
+
+              {errorMsg && (
+                <p className="text-sm text-red-500">{errorMsg}</p>
+              )}
 
               {/* Terms */}
               <p className="text-xs text-muted-foreground text-center">

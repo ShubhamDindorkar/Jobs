@@ -22,7 +22,7 @@ export const Spotlight = ({
   width = 560,
   height = 1380,
   smallWidth = 240,
-  duration = 7,
+  duration = 30,
   xOffset = 100,
 }: SpotlightProps = {}) => {
   return (
@@ -41,6 +41,7 @@ export const Spotlight = ({
       <motion.div
         animate={{
           x: [0, xOffset, 0],
+          y: [0, 15, 0],
         }}
         transition={{
           duration,
@@ -84,6 +85,7 @@ export const Spotlight = ({
       <motion.div
         animate={{
           x: [0, -xOffset, 0],
+          y: [0, -15, 0],
         }}
         transition={{
           duration,

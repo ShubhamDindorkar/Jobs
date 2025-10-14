@@ -111,18 +111,7 @@ app.get('/auth/user', async (req, res) => {
   }
 });
 
-// Job routes (placeholder for future implementation)
-app.get('/jobs', async (req, res) => {
-  try {
-    // This will be implemented when we add job data
-    res.json({ 
-      message: 'Jobs endpoint ready',
-      jobs: []
-    });
-  } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
+// No domain routes yet; jobs are fetched via external API from the frontend.
 
 // Error handling middleware
 app.use((err, req, res, next) => {
