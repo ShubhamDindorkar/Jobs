@@ -31,7 +31,7 @@ export function FAQSection({ items = DEFAULT_QA }: { items?: QA[] }) {
   const [openIndex, setOpenIndex] = React.useState<number | null>(0);
 
   return (
-    <section className="relative py-16 md:py-24 overflow-hidden">
+    <section id="faq" className="relative py-16 md:py-24 overflow-hidden">
       {/* shared grid background so sections feel continuous */}
       <div className="absolute inset-0 bg-grid-subtle" />
       {/* top gradient (transparent to transparent) to avoid hard edges */}

@@ -70,9 +70,8 @@ export function LogoMarquee({ inline = false }: { inline?: boolean }) {
         <div className="mb-3 text-center text-xs md:text-sm text-muted-foreground tracking-wide">
           Sourcing from trusted platforms
         </div>
-        <div className="relative">
-          <div className="mask-gradient pointer-events-none absolute inset-0 z-10" />
-          <div className="whitespace-nowrap will-change-transform animate-marquee flex items-center gap-10 md:gap-16 hover:[animation-play-state:paused]">
+        <div className="relative overflow-hidden no-scrollbar">
+          <div className="whitespace-nowrap will-change-transform animate-marquee flex items-center gap-10 md:gap-16 hover:[animation-play-state:paused] mask-edges">
             {row}
             {row}
             {row}
@@ -81,7 +80,10 @@ export function LogoMarquee({ inline = false }: { inline?: boolean }) {
         <style jsx>{`
           .animate-marquee { animation: marquee 32s linear infinite; }
           @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-33.333%); } }
-          .mask-gradient { -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%); background: transparent; }
+          /* Symmetric fades: 1/6 (~16.66%) on both sides; middle ~2/3 visible */
+          .mask-edges { -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 16.66%, #000 83.34%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0%, #000 16.66%, #000 83.34%, transparent 100%); }
+          .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+          .no-scrollbar::-webkit-scrollbar { display: none; }
         `}</style>
       </div>
     );
@@ -92,9 +94,8 @@ export function LogoMarquee({ inline = false }: { inline?: boolean }) {
       <div className="absolute inset-0 bg-grid-subtle" />
       <div className="relative container mx-auto px-4">
         <div className="mb-4 text-center text-xs md:text-sm text-muted-foreground">Sourcing from trusted platforms</div>
-        <div className="relative">
-          <div className="mask-gradient pointer-events-none absolute inset-0 z-10" />
-          <div className="whitespace-nowrap will-change-transform animate-marquee flex items-center gap-10 md:gap-16 hover:[animation-play-state:paused]">
+        <div className="relative mx-auto w-full overflow-hidden no-scrollbar">
+          <div className="whitespace-nowrap will-change-transform animate-marquee flex items-center gap-10 md:gap-16 hover:[animation-play-state:paused] mask-edges">
             {row}
             {row}
             {row}
@@ -102,9 +103,12 @@ export function LogoMarquee({ inline = false }: { inline?: boolean }) {
         </div>
       </div>
       <style jsx>{`
-        .animate-marquee { animation: marquee 32s linear infinite; }
+        .animate-marquee { animation: marquee 34s linear infinite; }
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-33.333%); } }
-        .mask-gradient { -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%); background: transparent; }
+        /* Symmetric fades: 1/6 (~16.66%) on both sides; middle ~2/3 visible */
+        .mask-edges { -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 16.66%, #000 83.34%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0%, #000 16.66%, #000 83.34%, transparent 100%); }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
       `}</style>
     </section>
   );

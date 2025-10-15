@@ -16,10 +16,10 @@ export function Navigation() {
   const [open, setOpen] = React.useState(false);
 
   const items = [
-    { name: "Find Jobs", link: "#jobs" },
-    { name: "Companies", link: "#companies" },
-    { name: "Salaries", link: "#salaries" },
-    { name: "Career Advice", link: "#careers" },
+    { name: "Home", link: "/" },
+    { name: "Our Mission", link: "#mission" },
+    { name: "Reviews", link: "#reviews" },
+    { name: "FAQ", link: "#faq" },
   ];
 
   return (

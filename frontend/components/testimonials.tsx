@@ -25,7 +25,7 @@ const TESTIMONIALS: Testimonial[] = [
 
 export function TestimonialsSection() {
   return (
-    <section className="relative py-16 md:py-24 overflow-hidden">
+    <section id="reviews" className="relative py-16 md:py-24 overflow-hidden">
       {/* shared grid background layer */}
       <div className="absolute inset-0 bg-grid-subtle" />
       {/* top gradient blend from previous section */}
