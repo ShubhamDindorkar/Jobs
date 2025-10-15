@@ -14,9 +14,61 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(data, { status: 200 });
     }
 
-    // Otherwise, call Scrapingdog directly from server (requires SCRAPINGDOG_API_KEY in env)
+    // If no backend configured, either call Scrapingdog (if key present) or fall back to sample data
     const apiKey = process.env.SCRAPINGDOG_API_KEY;
-    if (!apiKey) return NextResponse.json({ error: "SCRAPINGDOG_API_KEY not set" }, { status: 500 });
+    if (!apiKey) {
+      const sample = [
+        {
+          id: "sample-1",
+          title: "Frontend Developer",
+          company: "Acme Corp",
+          location: "Remote",
+          salary: "—",
+          type: "Full-time",
+          posted: "Recently",
+          description: "Build delightful web interfaces using React and Next.js.",
+          rating: 4.6,
+          isRemote: true,
+          isFeatured: true,
+          matchPercent: 82,
+          applyUrl: "https://example.com/apply/frontend",
+          logo: undefined,
+        },
+        {
+          id: "sample-2",
+          title: "Backend Engineer",
+          company: "Globex",
+          location: "New York, NY",
+          salary: "$130k – $160k",
+          type: "Full-time",
+          posted: "1 day ago",
+          description: "Design and scale Node.js services and APIs.",
+          rating: 4.2,
+          isRemote: false,
+          isFeatured: false,
+          matchPercent: 74,
+          applyUrl: "https://example.com/apply/backend",
+          logo: undefined,
+        },
+        {
+          id: "sample-3",
+          title: "Data Scientist",
+          company: "Initech",
+          location: "Hybrid - San Francisco, CA",
+          salary: "—",
+          type: "Contract",
+          posted: "3 days ago",
+          description: "Build ML models and collaborate with product teams.",
+          rating: 4.8,
+          isRemote: false,
+          isFeatured: false,
+          matchPercent: 67,
+          applyUrl: "https://example.com/apply/datasci",
+          logo: undefined,
+        },
+      ];
+      return NextResponse.json({ jobs: sample }, { status: 200 });
+    }
 
     // Map our query to Scrapingdog /jobs params
     const params = new URLSearchParams();

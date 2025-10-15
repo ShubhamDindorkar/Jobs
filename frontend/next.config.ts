@@ -1,11 +1,5 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  experimental: {
-    instrumentationHook: false,
-    // ensure webpack pipeline
-    turbo: false,
-  },
-};
+const nextConfig: NextConfig = {};
 
 export default nextConfig;

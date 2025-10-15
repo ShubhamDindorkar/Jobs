@@ -90,11 +90,68 @@ export function JobListings() {
   const [jobs, setJobs] = React.useState(mockJobs);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [lastCount, setLastCount] = React.useState<number | null>(null);
+  const [lastRanAt, setLastRanAt] = React.useState<string | null>(null);
 
   // Search fields
   const [title, setTitle] = React.useState("");
   const [location, setLocation] = React.useState("");
   const [level, setLevel] = React.useState<string | undefined>(undefined); // 1..5
+  const [showTitleSuggestions, setShowTitleSuggestions] = React.useState(false);
+  const [showLocationSuggestions, setShowLocationSuggestions] = React.useState(false);
+
+  const rolePresets = React.useMemo(
+    () => [
+      "Frontend Developer",
+      "Backend Developer",
+      "Full Stack Developer",
+      "React Developer",
+      "Next.js Developer",
+      "Node.js Engineer",
+      "Data Scientist",
+      "Machine Learning Engineer",
+      "Product Manager",
+      "UX Designer",
+      "UI Designer",
+      "DevOps Engineer",
+      "Mobile Developer",
+      "QA Engineer",
+      "Security Engineer",
+    ],
+    []
+  );
+
+  const filteredRolePresets = React.useMemo(() => {
+    const q = title.trim().toLowerCase();
+    if (!q) return rolePresets;
+    return rolePresets.filter((r) => r.toLowerCase().includes(q)).slice(0, 8);
+  }, [title, rolePresets]);
+
+  const locationPresets = React.useMemo(
+    () => [
+      "Remote",
+      "Worldwide",
+      "United States",
+      "United Kingdom",
+      "Canada",
+      "European Union",
+      "Germany",
+      "India",
+      "Australia",
+      "Singapore",
+      "San Francisco, CA",
+      "New York, NY",
+      "London, UK",
+      "Berlin, DE",
+    ],
+    []
+  );
+
+  const filteredLocationPresets = React.useMemo(() => {
+    const q = location.trim().toLowerCase();
+    if (!q) return locationPresets;
+    return locationPresets.filter((r) => r.toLowerCase().includes(q)).slice(0, 8);
+  }, [location, locationPresets]);
 
   const fetchJobs = React.useCallback(async () => {
     try {
@@ -115,9 +172,13 @@ export function JobListings() {
       const data = await r.json();
       const next = Array.isArray(data?.jobs) ? data.jobs : [] as any[];
       setJobs(next.length ? next : []);
+      setLastCount(next.length);
+      setLastRanAt(new Date().toLocaleTimeString());
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : "Failed to load jobs";
       setError(msg);
+      setLastCount(0);
+      setLastRanAt(new Date().toLocaleTimeString());
     } finally {
       setLoading(false);
     }
@@ -157,18 +218,108 @@ export function JobListings() {
           className="flex flex-col md:flex-row gap-4 mb-8"
         >
           <div className="flex-1 grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-3">
-            <input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Jobs title (e.g., Frontend, Data)"
-              className="w-full rounded-2xl border border-border bg-background/50 px-3 py-2 text-sm"
-            />
-            <input
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              placeholder="Location (e.g., United States)"
-              className="w-full rounded-2xl border border-border bg-background/50 px-3 py-2 text-sm"
-            />
+            <div className="relative">
+              <input
+                value={title}
+                onChange={(e) => {
+                  setTitle(e.target.value);
+                  setShowTitleSuggestions(true);
+                }}
+                onFocus={() => setShowTitleSuggestions(true)}
+                onBlur={() => setTimeout(() => setShowTitleSuggestions(false), 120)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    fetchJobs();
+                    setShowTitleSuggestions(false);
+                  }
+                }}
+                placeholder="Job title (e.g., React, Data)"
+                className="w-full rounded-2xl border border-border bg-background/50 px-3 py-2 text-sm"
+                aria-autocomplete="list"
+                aria-expanded={showTitleSuggestions}
+                aria-controls="title-suggestions"
+              />
+              {showTitleSuggestions && (
+                <div
+                  id="title-suggestions"
+                  className="absolute left-0 right-0 mt-1 z-20 rounded-2xl border border-border/60 bg-secondary/90 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.25)] max-h-64 overflow-y-auto"
+                  role="listbox"
+                >
+                  {filteredRolePresets.length === 0 ? (
+                    <div className="px-3 py-2 text-sm text-muted-foreground">No suggestions</div>
+                  ) : (
+                    filteredRolePresets.map((option) => (
+                      <button
+                        key={option}
+                        type="button"
+                        role="option"
+                        className="w-full text-left px-3 py-2 text-sm text-foreground hover:bg-secondary/60 rounded-xl"
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => {
+                          setTitle(option);
+                          setShowTitleSuggestions(false);
+                          fetchJobs();
+                        }}
+                      >
+                        {option}
+                      </button>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
+            <div className="relative">
+              <input
+                value={location}
+                onChange={(e) => {
+                  setLocation(e.target.value);
+                  setShowLocationSuggestions(true);
+                }}
+                onFocus={() => setShowLocationSuggestions(true)}
+                onBlur={() => setTimeout(() => setShowLocationSuggestions(false), 120)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    fetchJobs();
+                    setShowLocationSuggestions(false);
+                  }
+                }}
+                placeholder="Location (e.g., United States)"
+                className="w-full rounded-2xl border border-border bg-background/50 px-3 py-2 text-sm"
+                aria-autocomplete="list"
+                aria-expanded={showLocationSuggestions}
+                aria-controls="location-suggestions"
+              />
+              {showLocationSuggestions && (
+                <div
+                  id="location-suggestions"
+                  className="absolute left-0 right-0 mt-1 z-20 rounded-2xl border border-border/60 bg-secondary/90 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.25)] max-h-64 overflow-y-auto"
+                  role="listbox"
+                >
+                  {filteredLocationPresets.length === 0 ? (
+                    <div className="px-3 py-2 text-sm text-muted-foreground">No suggestions</div>
+                  ) : (
+                    filteredLocationPresets.map((option) => (
+                      <button
+                        key={option}
+                        type="button"
+                        role="option"
+                        className="w-full text-left px-3 py-2 text-sm text-foreground hover:bg-secondary/60 rounded-xl"
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => {
+                          setLocation(option);
+                          setShowLocationSuggestions(false);
+                          fetchJobs();
+                        }}
+                      >
+                        {option}
+                      </button>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
             <div className="flex items-stretch gap-3">
               <select
                 value={level ?? ""}
@@ -187,6 +338,17 @@ export function JobListings() {
               </Button>
             </div>
           </div>
+          {/* Live query status */}
+          <div className="md:ml-4 text-xs text-muted-foreground flex items-center">
+            {loading ? (
+              <span>Searching…</span>
+            ) : lastCount !== null ? (
+              <span>
+                {lastCount} result{lastCount === 1 ? "" : "s"}
+                {lastRanAt ? ` • ${lastRanAt}` : ""}
+              </span>
+            ) : null}
+          </div>
         </motion.div>
 
         {error && (
@@ -194,11 +356,17 @@ export function JobListings() {
         )}
 
         {/* Job List (horizontal cards) */}
-        <div className="grid grid-cols-1 gap-4 md:gap-6">
-          {jobs.map((job, index) => (
-            <JobCard key={job.id} job={job} index={index} />
-          ))}
-        </div>
+        {jobs.length === 0 && !loading ? (
+          <div className="rounded-2xl border border-border/60 bg-secondary/40 p-4 text-sm text-muted-foreground">
+            No results. Try a broader title or a different location.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-4 md:gap-6">
+            {jobs.map((job, index) => (
+              <JobCard key={job.id} job={job} index={index} />
+            ))}
+          </div>
+        )}
 
         {/* Load More Button */}
         <motion.div
