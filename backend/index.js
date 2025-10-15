@@ -57,7 +57,7 @@ app.post('/storage/upload-url', async (req, res) => {
       return res.status(500).json({ error: 'S3 not configured', detail: 'Missing SUPABASE_S3_* env vars' });
     }
 
-    const bucket = process.env.RESUMES_BUCKET || 'resume';
+    const bucket = process.env.RESUMES_BUCKET || 'resumes';
     const key = `${userId}/resume-${Date.now()}.pdf`;
 
     const command = new PutObjectCommand({
@@ -79,6 +79,77 @@ app.post('/storage/upload-url', async (req, res) => {
     const detail = error?.message || error?.code || 'unknown';
     console.error('presign error', detail);
     return res.status(500).json({ error: 'Failed to create upload URL', detail });
+  }
+});
+
+// Resume parse proxy (Affinda API or compatible). Requires AFFINDA_API_KEY.
+app.post('/resume/parse', async (req, res) => {
+  try {
+    const { url } = req.body || {};
+    if (!url) return res.status(400).json({ error: 'Missing url' });
+    if (!process.env.AFFINDA_API_KEY) return res.status(500).json({ error: 'Parser not configured', detail: 'Missing AFFINDA_API_KEY' });
+
+    // Affinda: https://docs.affinda.com/reference/create-document
+    // We pass URL and wait for parsing to complete
+    const payload = { url, wait: true, collection: null }; // minimal
+    const r = await axios.post('https://api.affinda.com/v3/documents', payload, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.AFFINDA_API_KEY}`,
+      },
+      timeout: 60000,
+    });
+
+    const data = r.data || {};
+    // Normalize a subset of fields for frontend consumption
+    const cv = data?.data || {};
+    const name = cv?.name || {};
+    const given = name?.given || '';
+    const family = name?.family || '';
+    const summary = cv?.professionalSummary || '';
+    const loc = cv?.location?.formatted || '';
+    const skills = (cv?.skills || []).map((s) => s?.name).filter(Boolean);
+    const experience = (cv?.workExperience || []).map((w) => ({
+      id: String(w?.id || `${w?.jobTitle || ''}-${w?.organization || ''}-${w?.dates?.startDate || ''}`),
+      title: w?.jobTitle || '',
+      company: w?.organization || '',
+      start: (w?.dates?.startDate || '').slice(0, 7),
+      end: (w?.dates?.endDate ? String(w?.dates?.endDate).slice(0, 7) : 'Present'),
+      description: w?.jobDescription || '',
+    }));
+    const education = (cv?.education || []).map((e) => ({
+      id: String(e?.id || `${e?.organization || ''}-${e?.accreditation || ''}-${e?.dates?.startDate || ''}`),
+      school: e?.organization || '',
+      degree: e?.accreditation?.education || e?.accreditation?.inputStr || '',
+      start: (e?.dates?.startDate || '').slice(0, 7),
+      end: (e?.dates?.endDate ? String(e?.dates?.endDate).slice(0, 7) : 'Present'),
+    }));
+    const links = {
+      website: (cv?.websites || [])[0]?.url || undefined,
+      linkedin: (cv?.linkedin || [])[0]?.url || undefined,
+      github: (cv?.github || [])[0]?.url || undefined,
+      twitter: (cv?.twitter || [])[0]?.url || undefined,
+    };
+
+    return res.json({
+      profile: {
+        firstName: given,
+        lastName: family,
+        headline: cv?.headline || '',
+        location: loc,
+        bio: summary,
+        skills,
+        experience,
+        education,
+        links,
+      },
+      raw: data,
+    });
+  } catch (error) {
+    const status = error?.response?.status || 500;
+    const detail = error?.response?.data || error?.message || 'Failed to parse resume';
+    console.error('resume parse error', status, detail);
+    return res.status(status).json({ error: 'Failed to parse resume', detail });
   }
 });
 
