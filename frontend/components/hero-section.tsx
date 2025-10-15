@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Spotlight } from "@/components/ui/spotlight-new";
+import { LogoMarquee } from "@/components/logo-marquee";
 
 export function HeroSection() {
   return (
@@ -83,6 +84,16 @@ export function HeroSection() {
               <Check className="h-4 w-4 text-primary" />
               <span className="text-foreground">7 days free trial</span>
             </div>
+          </motion.div>
+
+          {/* Inline logo marquee */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.9 }}
+            className="mt-10"
+          >
+            <LogoMarquee inline />
           </motion.div>
         </div>
       </div>

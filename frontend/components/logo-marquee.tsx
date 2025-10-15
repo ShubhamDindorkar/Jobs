@@ -50,7 +50,7 @@ const ITEMS: LogoItem[] = [
   { key: "ziprecruiter", render: ziprecruiterLogo },
 ];
 
-export function LogoMarquee() {
+export function LogoMarquee({ inline = false }: { inline?: boolean }) {
   const row = (
     <div className="flex items-center gap-10 md:gap-16">
       {ITEMS.map((it) => (
@@ -60,6 +60,27 @@ export function LogoMarquee() {
       ))}
     </div>
   );
+
+  if (inline) {
+    return (
+      <div className="relative overflow-hidden pt-4">
+        <div className="mb-2 text-center text-xs md:text-sm text-muted-foreground">Sourcing from trusted platforms</div>
+        <div className="relative">
+          <div className="mask-gradient pointer-events-none absolute inset-0 z-10" />
+          <div className="whitespace-nowrap will-change-transform animate-marquee flex items-center gap-10 md:gap-16">
+            {row}
+            {row}
+            {row}
+          </div>
+        </div>
+        <style jsx>{`
+          .animate-marquee { animation: marquee 28s linear infinite; }
+          @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-33.333%); } }
+          .mask-gradient { -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%); background: transparent; }
+        `}</style>
+      </div>
+    );
+  }
 
   return (
     <section className="relative py-8 md:py-10 overflow-hidden">
@@ -76,19 +97,9 @@ export function LogoMarquee() {
         </div>
       </div>
       <style jsx>{`
-        .animate-marquee {
-          animation: marquee 28s linear infinite;
-        }
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-33.333%); }
-        }
-        /* Use CSS mask to fade edges without adding dark overlay */
-        .mask-gradient {
-          -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
-                  mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
-          background: transparent;
-        }
+        .animate-marquee { animation: marquee 28s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-33.333%); } }
+        .mask-gradient { -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%); background: transparent; }
       `}</style>
     </section>
   );
