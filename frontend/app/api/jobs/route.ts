@@ -1,5 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 
+interface JobData {
+  job_id?: string;
+  id?: string;
+  job_position?: string;
+  title?: string;
+  company_name?: string;
+  company?: string;
+  job_location?: string;
+  location?: string;
+  salary?: string;
+  pay?: string;
+  job_type?: string;
+  employment_type?: string;
+  job_posting_date?: string;
+  posted_time?: string;
+  description?: string;
+  snippet?: string;
+  rating?: number;
+  match?: number;
+  score?: number;
+  job_link?: string;
+  job_url?: string;
+  url?: string;
+  company_logo?: string;
+}
+
 export async function GET(req: NextRequest) {
   try {
     const qs = req.nextUrl.searchParams;
@@ -97,8 +123,8 @@ export async function GET(req: NextRequest) {
     if (!r.ok) return NextResponse.json({ error: `Upstream ${r.status}` }, { status: r.status });
     const data = await r.json();
 
-    const raw = Array.isArray(data) ? data : Array.isArray((data as any)?.jobs) ? (data as any).jobs : [];
-    const jobs = raw.map((j: any, idx: number) => ({
+    const raw = Array.isArray(data) ? data : Array.isArray((data as { jobs?: JobData[] })?.jobs) ? (data as { jobs: JobData[] }).jobs : [];
+    const jobs = raw.map((j: JobData, idx: number) => ({
       id: String(j.job_id || j.id || idx),
       title: j.job_position || j.title || "Job",
       company: j.company_name || j.company || "Company",

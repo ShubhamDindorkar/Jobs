@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import { Search } from "lucide-react";
 
 export function MissionSection() {
   return (
@@ -14,7 +13,7 @@ export function MissionSection() {
           </h3>
           <p className="mx-auto max-w-4xl text-sm md:text-lg text-muted-foreground leading-relaxed">
             We empower you with equal opportunities to build your dream career. Applying to numerous jobs
-            without a clear strategy won't lead you to your ideal role. With Jobs Search, we connect you to
+            without a clear strategy won&apos;t lead you to your ideal role. With Jobs Search, we connect you to
             the best, most promising possibilities and guide you each step of the way so the offer you deserve
             can come sooner.
           </p>

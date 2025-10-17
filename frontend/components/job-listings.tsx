@@ -170,7 +170,7 @@ export function JobListings() {
       const r = await fetch(`${base}?${params.toString()}`);
       if (!r.ok) throw new Error(`Fetch failed: ${r.status}`);
       const data = await r.json();
-      const next = Array.isArray(data?.jobs) ? data.jobs : [] as any[];
+      const next = Array.isArray(data?.jobs) ? data.jobs : [] as unknown[];
       setJobs(next.length ? next : []);
       setLastCount(next.length);
       setLastRanAt(new Date().toLocaleTimeString());
@@ -185,11 +185,9 @@ export function JobListings() {
   }, [title, location, level]);
 
   // Initial load only
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(() => {
     fetchJobs();
-    // empty deps to keep array size constant between renders
-  }, []);
+  }, [fetchJobs]);
 
   return (
     <section id="jobs" className="py-20 bg-background">
@@ -237,7 +235,6 @@ export function JobListings() {
                 placeholder="Job title (e.g., React, Data)"
                 className="w-full rounded-2xl border border-border bg-background/50 px-3 py-2 text-sm"
                 aria-autocomplete="list"
-                aria-expanded={showTitleSuggestions}
                 aria-controls="title-suggestions"
               />
               {showTitleSuggestions && (
@@ -254,6 +251,7 @@ export function JobListings() {
                         key={option}
                         type="button"
                         role="option"
+                        aria-selected={false}
                         className="w-full text-left px-3 py-2 text-sm text-foreground hover:bg-secondary/60 rounded-xl"
                         onMouseDown={(e) => e.preventDefault()}
                         onClick={() => {
@@ -288,7 +286,6 @@ export function JobListings() {
                 placeholder="Location (e.g., United States)"
                 className="w-full rounded-2xl border border-border bg-background/50 px-3 py-2 text-sm"
                 aria-autocomplete="list"
-                aria-expanded={showLocationSuggestions}
                 aria-controls="location-suggestions"
               />
               {showLocationSuggestions && (
@@ -305,6 +302,7 @@ export function JobListings() {
                         key={option}
                         type="button"
                         role="option"
+                        aria-selected={false}
                         className="w-full text-left px-3 py-2 text-sm text-foreground hover:bg-secondary/60 rounded-xl"
                         onMouseDown={(e) => e.preventDefault()}
                         onClick={() => {

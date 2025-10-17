@@ -54,7 +54,7 @@ export default function DashboardPage() {
       if (redirectTimer) clearTimeout(redirectTimer);
       sub.subscription.unsubscribe();
     };
-  }, [router]);
+  }, [router, waiting]);
 
   if (!checked) return null; // still loading initial check
   if (waiting && !email) return null; // within grace period
