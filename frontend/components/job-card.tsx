@@ -28,7 +28,6 @@ type JobWithExtras = JobCardProps["job"] & { matchPercent?: number; applyUrl?: s
 
 export function JobCard({ job, index }: JobCardProps) {
   const extended = job as JobWithExtras;
-  const matchPercent = extended.matchPercent ?? 74;
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -73,7 +72,7 @@ export function JobCard({ job, index }: JobCardProps) {
         </CardHeader>
 
         <CardContent className="relative pt-0">
-          <div className="grid grid-cols-[1fr_auto] gap-4 md:gap-6 items-center">
+          <div className="flex flex-col gap-4 md:gap-6">
             <div>
               <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
                 {job.description}
@@ -110,26 +109,6 @@ export function JobCard({ job, index }: JobCardProps) {
                   </Button>
                 </div>
               </div>
-            </div>
-
-            {/* Match panel */}
-            <div className="flex flex-col items-center justify-center rounded-xl border border-border/60 bg-secondary/40 px-4 py-5 w-48">
-              <div className="relative h-20 w-20 mb-2">
-                <div
-                  className="absolute inset-0 rounded-full"
-                  style={{
-                    background: `conic-gradient(var(--color-primary) ${matchPercent * 3.6}deg, rgba(255,255,255,0.08) 0deg)`,
-                  }}
-                />
-                <div className="absolute inset-1 rounded-full bg-background/80 border border-border/60 flex items-center justify-center">
-                  <span className="text-xl font-semibold text-foreground">{matchPercent}%</span>
-                </div>
-              </div>
-              <div className="text-[10px] tracking-wide font-semibold text-foreground mb-2">GOOD MATCH</div>
-              <ul className="text-xs text-muted-foreground space-y-1">
-                <li>• Growth Opportunities</li>
-                <li>• H1B Sponsor Likely</li>
-              </ul>
             </div>
           </div>
         </CardContent>
