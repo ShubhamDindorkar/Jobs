@@ -2,14 +2,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { LayoutGrid, ListChecks, Calendar, BarChart3, Users, Settings, LogOut } from "lucide-react";
+import { LayoutGrid, Users, LogOut } from "lucide-react";
 
 const items = [
   { href: "/dashboard", label: "Dashboard", icon: <LayoutGrid className="h-4 w-4" /> },
-  { href: "/dashboard/tasks", label: "Tasks", icon: <ListChecks className="h-4 w-4" /> },
-  { href: "/dashboard/calendar", label: "Calendar", icon: <Calendar className="h-4 w-4" /> },
-  { href: "/dashboard/analytics", label: "Analytics", icon: <BarChart3 className="h-4 w-4" /> },
-  { href: "/dashboard/team", label: "Team", icon: <Users className="h-4 w-4" /> },
   { href: "/dashboard/profile", label: "Profile", icon: <Users className="h-4 w-4" /> },
 ];
 
@@ -32,11 +28,6 @@ export function Sidebar({ onSignOut }: { onSignOut?: () => void }) {
         })}
       </nav>
       <div className="mt-4 grid gap-2">
-        <Link href="/dashboard/settings" className="block">
-          <div className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-secondary/50">
-            <Settings className="h-4 w-4" /> Settings
-          </div>
-        </Link>
         <Button variant="outline" size="sm" onClick={onSignOut} className="justify-start gap-2">
           <LogOut className="h-4 w-4" /> Logout
         </Button>
